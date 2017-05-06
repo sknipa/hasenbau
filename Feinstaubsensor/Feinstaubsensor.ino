@@ -95,8 +95,8 @@
 /*****************************************************************
 /* Variables with defaults                                       *
 /*****************************************************************/
-char wlanssid[65] = "Freifunk-disabled";
-char wlanpwd[65] = "";
+char wlanssid[65] = "VVAirNet2";
+char wlanpwd[65] = "hans200770";
 
 char www_username[65] = "admin";
 char www_password[65] = "feinstaub";

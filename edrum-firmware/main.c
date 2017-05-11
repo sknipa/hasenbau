@@ -13,6 +13,7 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>     /* for _delay_ms() */
+#include "pinDefines.h"
 
 #include "usbdrv.h"
 #include "oddebug.h"
@@ -23,6 +24,8 @@
 
 uint8_t adc_done = 0;
 uint8_t adc_data = 0;
+
+
 
 // This descriptor is based on http://www.usb.org/developers/devclass_docs/midi10.pdf
 // 
@@ -224,7 +227,7 @@ uchar usbFunctionSetup(uchar data[8])
 	usbRequest_t *rq = (void *) data;
 
 	// DEBUG LED
-	// PORTC ^= 0x01;
+	 PORTC ^= 0x01;
 
 	if ((rq->bmRequestType & USBRQ_TYPE_MASK) == USBRQ_TYPE_CLASS) {	/* class request type */
 
@@ -245,7 +248,7 @@ uchar usbFunctionSetup(uchar data[8])
 uchar usbFunctionRead(uchar * data, uchar len)
 {
 	// DEBUG LED
-	// PORTC ^= 0x02;
+	 PORTC ^= 0x02;
 
 	data[0] = 0;
 	data[1] = 0;
@@ -266,7 +269,7 @@ uchar usbFunctionRead(uchar * data, uchar len)
 uchar usbFunctionWrite(uchar * data, uchar len)
 {
 	// DEBUG LED
-	// PORTC ^= 0x04;
+	 PORTC ^= 0x04;
 	return 1;
 }
 
@@ -433,11 +436,12 @@ int main(void) {
 	sendEmptyFrame = 0;
 
 	sei();
-	
+	LED_DDR = 0xff;
 	while(1) {
 		if(adc_done) {
-			if(adc_data > 5) { // Rauschen wegfiltern
+			if(adc_data > 5) { // Rauschen wegfiltern 
 				sendMidi(0x90, 62 , adc_data);
+				LED_PORT ^= 1 << 1;
 			}
 			adc_done = 0;
 		}

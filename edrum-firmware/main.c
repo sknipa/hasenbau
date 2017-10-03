@@ -28,7 +28,7 @@ uint8_t adc_data = 0;
 
 
 // This descriptor is based on http://www.usb.org/developers/devclass_docs/midi10.pdf
-// 
+//
 // Appendix B. Example: Simple MIDI Adapter (Informative)
 // B.1 Device Descriptor
 //
@@ -65,16 +65,16 @@ PROGMEM const char configDescrMIDI[] = {	/* USB configuration descriptor */
 	USB_CFG_MAX_BUS_POWER / 2,	/* max USB current in 2mA units */
 
 // B.3 AudioControl Interface Descriptors
-// The AudioControl interface describes the device structure (audio function topology) 
-// and is used to manipulate the Audio Controls. This device has no audio function 
-// incorporated. However, the AudioControl interface is mandatory and therefore both 
-// the standard AC interface descriptor and the classspecific AC interface descriptor 
-// must be present. The class-specific AC interface descriptor only contains the header 
+// The AudioControl interface describes the device structure (audio function topology)
+// and is used to manipulate the Audio Controls. This device has no audio function
+// incorporated. However, the AudioControl interface is mandatory and therefore both
+// the standard AC interface descriptor and the classspecific AC interface descriptor
+// must be present. The class-specific AC interface descriptor only contains the header
 // descriptor.
 
 // B.3.1 Standard AC Interface Descriptor
-// The AudioControl interface has no dedicated endpoints associated with it. It uses the 
-// default pipe (endpoint 0) for all communication purposes. Class-specific AudioControl 
+// The AudioControl interface has no dedicated endpoints associated with it. It uses the
+// default pipe (endpoint 0) for all communication purposes. Class-specific AudioControl
 // Requests are sent using the default pipe. There is no Status Interrupt endpoint provided.
 	/* AC interface descriptor follows inline: */
 	9,			/* sizeof(usbDescrInterface): length of descriptor in bytes */
@@ -88,10 +88,10 @@ PROGMEM const char configDescrMIDI[] = {	/* USB configuration descriptor */
 	0,			/* string index for interface */
 
 // B.3.2 Class-specific AC Interface Descriptor
-// The Class-specific AC interface descriptor is always headed by a Header descriptor 
-// that contains general information about the AudioControl interface. It contains all 
-// the pointers needed to describe the Audio Interface Collection, associated with the 
-// described audio function. Only the Header descriptor is present in this device 
+// The Class-specific AC interface descriptor is always headed by a Header descriptor
+// that contains general information about the AudioControl interface. It contains all
+// the pointers needed to describe the Audio Interface Collection, associated with the
+// described audio function. Only the Header descriptor is present in this device
 // because it does not contain any audio functionality as such.
 	/* AC Class-Specific descriptor */
 	9,			/* sizeof(usbDescrCDC_HeaderFn): length of descriptor in bytes */
@@ -394,7 +394,7 @@ uint8_t differ(int16_t a) {
 	int16_t diff = 0;
 	a = clips16(a, 0, 511);
 	cli();
-	// erste Ableitung = aktueller Wert - Vorgänger
+	// erste Ableitung = aktueller Wert - Vorgï¿½nger
 	diff = a - p;
 	// aktuellen Wert speichern
 	p = a;
@@ -403,7 +403,7 @@ uint8_t differ(int16_t a) {
 	return (uint8_t)(diff >> 2);
 }
 
-// Timer-Überlauf-Interrupt
+// Timer-ï¿½berlauf-Interrupt
 ISR(TIMER0_OVF_vect) {
 	int16_t tmpsamp = 0;
 	static uint8_t d[3] = {0,0,0};
@@ -413,18 +413,18 @@ ISR(TIMER0_OVF_vect) {
 	tmpsamp -= 512;
 	// Wertebreich eingrenzen
 	tmpsamp = clips16(tmpsamp, 0, 511);
-	// 2 Vorgängerwerte der 1. Ableitung 
+	// 2 Vorgï¿½ngerwerte der 1. Ableitung
 	d[2] = d[1];
 	d[1] = d[0];
 	// erste Ableitung ermitteln
 	d[0] = differ(tmpsamp);
 	// lokales Maximum ermitteln
-	if(d[1] > d[0]){ 
+	if(d[1] > d[0]){
 		if(d[1] > d[2]) {
 			adc_done = 1;
 		}
 	}
-	adc_data = tmpsamp >> 2; // 7 Bit für MIDI
+	adc_data = tmpsamp >> 2; // 7 Bit fï¿½r MIDI
 }
 
 int main(void) {
@@ -439,7 +439,7 @@ int main(void) {
 	LED_DDR = 0xff;
 	while(1) {
 		if(adc_done) {
-			if(adc_data > 5) { // Rauschen wegfiltern 
+			if(adc_data > 5) { // Rauschen wegfiltern
 				sendMidi(0x90, 62 , adc_data);
 				LED_PORT ^= 1 << 1;
 			}
